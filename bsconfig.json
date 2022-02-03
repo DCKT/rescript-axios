@@ -1,0 +1,28 @@
+{
+  "name": "rescript-axios",
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    },
+    {
+      "dir": "tests",
+      "subdirs": true,
+      "type": "dev"
+    },
+    {
+      "dir": "vendors",
+      "subdirs": true,
+      "type": "dev"
+    }
+  ],
+  "package-specs": [
+    {
+      "module": "commonjs",
+      "in-source": true
+    }
+  ],
+  "suffix": ".bs.js",
+  "bs-dependencies": ["reason-promise"],
+  "bs-dev-dependencies": ["rescript-test"]
+}

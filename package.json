@@ -1,0 +1,31 @@
+{
+  "name": "rescript-axios",
+  "version": "1.0.0",
+  "description": "Axios bindings with reason-promise",
+  "main": "index.js",
+  "scripts": {
+    "dev": "rescript build -w -with-deps",
+    "build": "rescript build",
+    "clean": "rescript clean",
+    "test": "retest tests/*.bs.js"
+  },
+  "keywords": [
+    "rescript",
+    "reasonml",
+    "axios",
+    "http",
+    "bucklescript"
+  ],
+  "author": "Thomas Deconinck",
+  "license": "MIT",
+  "devDependencies": {
+    "axios": "0.25.0",
+    "msw": "0.36.8",
+    "reason-promise": "1.1.5",
+    "rescript": "9.1.4",
+    "rescript-test": "3.2.0"
+  },
+  "peerDependencies": {
+    "reason-promise": "1.1.5"
+  }
+}

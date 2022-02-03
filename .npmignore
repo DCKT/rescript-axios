@@ -1,0 +1,6 @@
+lib/
+node_modules/
+vendors/
+tests/
+.merlin
+.bsb.lock
