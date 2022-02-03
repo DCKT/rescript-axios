@@ -22,7 +22,7 @@ Add to the `bsconfig.json` dependencies :
 ## Usage
 
 ```rescript
-Axios.get("http://myapi.com/test")
+Axios.get("http://myapi.com/test", ())
 ->Promise.Js.toResult
 ->Promise.mapOk(({data}) => data)
 ->Promise.tapError(err => {
@@ -31,4 +31,14 @@ Axios.get("http://myapi.com/test")
     | e => Js.log2("an error occured", e)
   }
 })
+->ignore
+
+let config = Axios.makeConfig(~baseURL="http://localhost", ())
+
+Axios.patch("/test", ~data=Js.Obj.empty(), ~config, ())
+  ->Promise.Js.toResult
+  ->Promise.tapOk(({data}) => {
+    Js.log(data["resValue"])
+  })
+  ->ignore
 ```
