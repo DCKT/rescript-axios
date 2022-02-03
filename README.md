@@ -1,6 +1,6 @@
 # rescript-axios
 
-Axios bindings with reason-promise
+Axios bindings with [reason-promise](https://github.com/aantron/promise)
 
 ## Setup
 
@@ -20,8 +20,6 @@ Add to the `bsconfig.json` dependencies :
 ```
 
 ## Usage
-
-This bindings
 
 ```rescript
 Axios.get("http://myapi.com/test")
