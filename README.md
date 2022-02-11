@@ -21,6 +21,8 @@ Add to the `bsconfig.json` dependencies :
 
 ## Usage
 
+### Basic
+
 ```rescript
 Axios.get("http://myapi.com/test", ())
 ->Promise.Js.toResult
@@ -32,7 +34,11 @@ Axios.get("http://myapi.com/test", ())
   }
 })
 ->ignore
+```
 
+### With config
+
+```rescript
 let config = Axios.makeConfig(~baseURL="http://localhost", ())
 
 Axios.patch("/test", ~data=Js.Obj.empty(), ~config, ())

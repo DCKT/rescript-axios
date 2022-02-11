@@ -23,24 +23,24 @@ type auth = {
 }
 type proxy = {host: int, port: int, auth: auth}
 
-type response<'data, 'header> = {
+type response<'data> = {
   data: 'data,
   status: int,
   statusText: string,
-  headers: Js.t<'header>,
+  headers: Js.Dict.t<string>,
   config: config,
 }
 
-type error<'responseData, 'responseHeader, 'request> = {
+type error<'responseData, 'request> = {
   request: option<'request>,
-  response: option<response<'responseData, 'responseHeader>>,
+  response: option<response<'responseData>>,
   message: string,
 }
 
-type adapter<'a, 'b, 'err> = config => Promise.Js.t<response<'a, 'b>, 'err>
+type adapter<'a, 'b, 'err> = config => Promise.Js.t<response<'a>, 'err>
 
 @module("axios")
-external isAxiosError: error<'a, 'b, 'c> => bool = "isAxiosError"
+external isAxiosError: error<'a, 'c> => bool = "isAxiosError"
 
 @obj
 external makeConfig: (
@@ -76,8 +76,7 @@ external get: (
   string,
   ~config: config=?,
   unit,
-) => Promise.Js.t<response<'data, 'headers>, error<'responseData, 'responseHeader, 'request>> =
-  "get"
+) => Promise.Js.t<response<'data>, error<'responseData, 'request>> = "get"
 
 @module("axios")
 external post: (
@@ -85,8 +84,7 @@ external post: (
   ~data: 'a,
   ~config: config=?,
   unit,
-) => Promise.Js.t<response<'data, 'headers>, error<'responseData, 'responseHeader, 'request>> =
-  "post"
+) => Promise.Js.t<response<'data>, error<'responseData, 'request>> = "post"
 
 @module("axios")
 external put: (
@@ -94,8 +92,7 @@ external put: (
   ~data: 'a,
   ~config: config=?,
   unit,
-) => Promise.Js.t<response<'data, 'headers>, error<'responseData, 'responseHeader, 'request>> =
-  "put"
+) => Promise.Js.t<response<'data>, error<'responseData, 'request>> = "put"
 
 @module("axios")
 external patch: (
@@ -103,24 +100,21 @@ external patch: (
   ~data: 'a,
   ~config: config=?,
   unit,
-) => Promise.Js.t<response<'data, 'headers>, error<'responseData, 'responseHeader, 'request>> =
-  "patch"
+) => Promise.Js.t<response<'data>, error<'responseData, 'request>> = "patch"
 
 @module("axios")
 external delete: (
   string,
   ~config: config=?,
   unit,
-) => Promise.Js.t<response<'data, 'headers>, error<'responseData, 'responseHeader, 'request>> =
-  "delete"
+) => Promise.Js.t<response<'data>, error<'responseData, 'request>> = "delete"
 
 @module("axios")
 external options: (
   string,
   ~config: config=?,
   unit,
-) => Promise.Js.t<response<'data, 'headers>, error<'responseData, 'responseHeader, 'request>> =
-  "options"
+) => Promise.Js.t<response<'data>, error<'responseData, 'request>> = "options"
 
 module Interceptors = {
   @module("axios") @scope(("default", "interceptors", "request"))
