@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/DCKT/rescript-axios/compare/v1.0.0...v1.0.1) (2022-02-11)
+
+
+### Bug Fixes
+
+* use Js.Dict.t<string> for response headers field ([4d5e399](https://github.com/DCKT/rescript-axios/commit/4d5e399e73e2db6b0269c3e22b82c57d109905ff))
+
 # 1.0.0 (2022-02-03)
 
 
