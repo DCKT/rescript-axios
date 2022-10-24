@@ -10,7 +10,7 @@ module Headers = {
 module CancelToken = {
   type t
 
-  @module("axios")
+  @module("axios") @scope(("default"))
   external source: unit => t = "source"
 }
 
@@ -39,7 +39,7 @@ type error<'responseData, 'request> = {
 
 type adapter<'a, 'b, 'err> = config => Promise.Js.t<response<'a>, 'err>
 
-@module("axios")
+@module("axios") @scope(("default"))
 external isAxiosError: error<'a, 'c> => bool = "isAxiosError"
 
 @obj
@@ -71,14 +71,14 @@ external makeConfig: (
   unit,
 ) => config = ""
 
-@module("axios")
+@module("axios") @scope(("default"))
 external get: (
   string,
   ~config: config=?,
   unit,
 ) => Promise.Js.t<response<'data>, error<'responseData, 'request>> = "get"
 
-@module("axios")
+@module("axios") @scope(("default"))
 external post: (
   string,
   ~data: 'a,
@@ -86,7 +86,7 @@ external post: (
   unit,
 ) => Promise.Js.t<response<'data>, error<'responseData, 'request>> = "post"
 
-@module("axios")
+@module("axios") @scope(("default"))
 external put: (
   string,
   ~data: 'a,
@@ -94,7 +94,7 @@ external put: (
   unit,
 ) => Promise.Js.t<response<'data>, error<'responseData, 'request>> = "put"
 
-@module("axios")
+@module("axios") @scope(("default"))
 external patch: (
   string,
   ~data: 'a,
@@ -102,14 +102,14 @@ external patch: (
   unit,
 ) => Promise.Js.t<response<'data>, error<'responseData, 'request>> = "patch"
 
-@module("axios")
+@module("axios") @scope(("default"))
 external delete: (
   string,
   ~config: config=?,
   unit,
 ) => Promise.Js.t<response<'data>, error<'responseData, 'request>> = "delete"
 
-@module("axios")
+@module("axios") @scope(("default"))
 external options: (
   string,
   ~config: config=?,
