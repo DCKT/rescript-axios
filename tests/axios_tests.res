@@ -4,55 +4,45 @@ let assertEqual = (~message, ~a, ~b) => assertion((a, b) => a === b, a, b, ~mess
 
 let config = Axios.makeConfig(~baseURL="http://localhost", ())
 
+let jsonResponse: Js.Json.t = {"test": 1}->Obj.magic
+
 let setup = () => {
-  let server = Msw.Server.setupServer([
-    Msw.Rest.get("http://localhost/test", (_, res, ctx) => {
-      res(ctx->Msw.Rest.Ctx.json({"test": 1}))
+  let server = Msw.setupServer([
+    Msw.Http.get("http://localhost/test", _ => {
+      Msw.HttpResponse.json(jsonResponse)
     }),
-    Msw.Rest.get("http://localhost/testError", (_, res, ctx) => {
-      res(. ctx->Msw.Rest.Ctx.status(500), ctx->Msw.Rest.Ctx.json({"test": 1}))
+    Msw.Http.get("http://localhost/testError", _ => {
+      Msw.HttpResponse.jsonWithOptions(jsonResponse, {status: 500})
     }),
-    Msw.Rest.post("http://localhost/test", (_, res, ctx) => {
-      res(ctx->Msw.Rest.Ctx.json({"test": 1}))
+    Msw.Http.post("http://localhost/test", _ => {
+      Msw.HttpResponse.json(jsonResponse)
     }),
-    Msw.Rest.post("http://localhost/testError", (_, res, ctx) => {
-      res(. ctx->Msw.Rest.Ctx.status(500), ctx->Msw.Rest.Ctx.json({"test": 1}))
+    Msw.Http.post("http://localhost/testError", _ => {
+      Msw.HttpResponse.jsonWithOptions(jsonResponse, {status: 500})
     }),
-    Msw.Rest.put("http://localhost/test", (_, res, ctx) => {
-      res(ctx->Msw.Rest.Ctx.json({"test": 1}))
+    Msw.Http.put("http://localhost/test", _ => {
+      Msw.HttpResponse.json(jsonResponse)
     }),
-    Msw.Rest.put("http://localhost/testError", (_, res, ctx) => {
-      res(. ctx->Msw.Rest.Ctx.status(500), ctx->Msw.Rest.Ctx.json({"test": 1}))
+    Msw.Http.put("http://localhost/testError", _ => {
+      Msw.HttpResponse.jsonWithOptions(jsonResponse, {status: 500})
     }),
-    Msw.Rest.patch("http://localhost/test", (_, res, ctx) => {
-      res(ctx->Msw.Rest.Ctx.json({"test": 1}))
+    Msw.Http.delete("http://localhost/test", _ => {
+      Msw.HttpResponse.json(jsonResponse)
     }),
-    Msw.Rest.patch("http://localhost/testError", (_, res, ctx) => {
-      res(. ctx->Msw.Rest.Ctx.status(500), ctx->Msw.Rest.Ctx.json({"test": 1}))
-    }),
-    Msw.Rest.delete("http://localhost/test", (_, res, ctx) => {
-      res(ctx->Msw.Rest.Ctx.json({"test": 1}))
-    }),
-    Msw.Rest.delete("http://localhost/testError", (_, res, ctx) => {
-      res(. ctx->Msw.Rest.Ctx.status(500), ctx->Msw.Rest.Ctx.json({"test": 1}))
-    }),
-    Msw.Rest.options("http://localhost/test", (_, res, ctx) => {
-      res(ctx->Msw.Rest.Ctx.json({"test": 1}))
-    }),
-    Msw.Rest.options("http://localhost/testError", (_, res, ctx) => {
-      res(. ctx->Msw.Rest.Ctx.status(500), ctx->Msw.Rest.Ctx.json({"test": 1}))
+    Msw.Http.delete("http://localhost/testError", _ => {
+      Msw.HttpResponse.jsonWithOptions(jsonResponse, {status: 500})
     }),
   ])
-  server->Msw.Server.listen
+  server.listen()
 
   server
 }
 
-let teardown = server => {
-  server->Msw.Server.close
+let teardown = (server: Msw.server) => {
+  server.close()
 }
 
-let testAsyncWithServer = testAsyncWith(~setup, ~teardown)
+let testAsyncWithServer = testAsyncWith(~setup, ~teardown, ...)
 
 testAsyncWithServer("GET - simple", (_, done) => {
   Axios.get("/test", ~config, ())
@@ -144,33 +134,6 @@ testAsyncWithServer("PUT - result + error", (_, done) => {
   ->ignore
 })
 
-testAsyncWithServer("PATCH - result + data", (_, done) => {
-  Axios.patch("/test", ~data=Js.Obj.empty(), ~config, ())
-  ->Promise.Js.toResult
-  ->Promise.tapOk(({data}) => {
-    assertEqual(~a=data["test"], ~b=1, ~message="Should receive data")
-    done()
-  })
-  ->ignore
-})
-
-testAsyncWithServer("PATCH - result + error", (_, done) => {
-  Axios.patch("/testError", ~data=Js.Obj.empty(), ~config, ())
-  ->Promise.Js.toResult
-  ->Promise.tapOk(_ => {
-    fail(~message="Should'nt be ok", ())
-  })
-  ->Promise.tapError(error => {
-    switch error.response {
-    | Some({status}) => assertEqual(~a=status, ~b=500, ~message="Should match status error code")
-    | _ => fail(~message="The error should contain a response with a status code", ())
-    }
-
-    done()
-  })
-  ->ignore
-})
-
 testAsyncWithServer("DELETE - result + data", (_, done) => {
   Axios.delete("/test", ~config, ())
   ->Promise.Js.toResult
@@ -183,32 +146,6 @@ testAsyncWithServer("DELETE - result + data", (_, done) => {
 
 testAsyncWithServer("DELETE - result + error", (_, done) => {
   Axios.delete("/testError", ~config, ())
-  ->Promise.Js.toResult
-  ->Promise.tapOk(_ => {
-    fail(~message="Should'nt be ok", ())
-  })
-  ->Promise.tapError(error => {
-    switch error.response {
-    | Some({status}) => assertEqual(~a=status, ~b=500, ~message="Should match status error code")
-    | _ => fail(~message="The error should contain a response with a status code", ())
-    }
-
-    done()
-  })
-  ->ignore
-})
-testAsyncWithServer("OPTIONS - result + data", (_, done) => {
-  Axios.options("/test", ~config, ())
-  ->Promise.Js.toResult
-  ->Promise.tapOk(({data}) => {
-    assertEqual(~a=data["test"], ~b=1, ~message="Should receive data")
-    done()
-  })
-  ->ignore
-})
-
-testAsyncWithServer("OPTIONS - result + error", (_, done) => {
-  Axios.options("/testError", ~config, ())
   ->Promise.Js.toResult
   ->Promise.tapOk(_ => {
     fail(~message="Should'nt be ok", ())

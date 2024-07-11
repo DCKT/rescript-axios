@@ -9,11 +9,6 @@
       "dir": "tests",
       "subdirs": true,
       "type": "dev"
-    },
-    {
-      "dir": "vendors",
-      "subdirs": true,
-      "type": "dev"
     }
   ],
   "package-specs": [
@@ -23,6 +18,6 @@
     }
   ],
   "suffix": ".bs.js",
-  "bs-dependencies": ["reason-promise"],
-  "bs-dev-dependencies": ["rescript-test"]
+  "bs-dependencies": ["@dck/rescript-promise"],
+  "bs-dev-dependencies": ["rescript-test", "@dck/rescript-msw"]
 }

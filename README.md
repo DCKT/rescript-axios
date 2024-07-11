@@ -1,13 +1,13 @@
 # rescript-axios
 
-Axios bindings with [reason-promise](https://github.com/aantron/promise)
+Axios bindings with [@dck/rescript-promise](https://github.com/DCKT/rescript-promise)
 
 ## Setup
 
 ```bash
-yarn add rescript-axios reason-promise
+yarn add rescript-axios @dck/rescript-promise
 # or
-npm i rescript-axios reason-promise
+npm i rescript-axios @dck/rescript-promise
 ```
 
 Add to the `bsconfig.json` dependencies :
